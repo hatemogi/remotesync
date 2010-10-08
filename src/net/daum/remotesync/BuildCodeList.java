@@ -130,7 +130,7 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 		for (BuildCode code: this) {
 			len += code.length();
 		}
-		return 0;
+		return len;
 	}
 
 	/** 

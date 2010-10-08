@@ -29,19 +29,28 @@ public class SourceCodeListTest extends TestUtils {
 	}
 	
 	@Test
-	public void testPack() throws IOException {
+	public void testPackAndUnpack() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		sc.pack(out);
 		assertEquals(1+2+4+24*6, out.size());
-		
+	
 		ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-		assertEquals(SourceCodeList.VERSION1, in.read());
-		assertEquals(0, in.read());
-		assertEquals(3, in.read());
-		assertEquals(0, in.read());
-		assertEquals(0, in.read());
-		assertEquals(0, in.read());
-		assertEquals(6, in.read());
+		/* pack test */ {
+			assertEquals(SourceCodeList.VERSION1, in.read());
+			assertEquals(0, in.read());
+			assertEquals(3, in.read());
+			assertEquals(0, in.read());
+			assertEquals(0, in.read());
+			assertEquals(0, in.read());
+			assertEquals(6, in.read());
+		}
+		
+		/* unpack test */ {
+			in.reset();
+			SourceCodeList unpacked = SourceCodeList.unpack(in);
+			assertEquals(6, unpacked.size());
+			assertEquals(Signature.fastSignature("345".getBytes()), unpacked.get(1).getFast());
+		}
 		
 	}	
 }
