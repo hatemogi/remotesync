@@ -150,7 +150,7 @@ public class SourceCodeList extends ArrayList<Signature> {
 	 * @throws IOException
 	 */
 	public BuildCodeList generateBuildCodes(InputStream targetFileIn) throws IOException {
-		return generateBuildCodes(targetFileIn, RemoteSync.DEFAULT_RAW_LIMIT);
+		return generateBuildCodes(targetFileIn, RemoteSync.MAX_RAW_LENGTH);
 	}
 	
 }

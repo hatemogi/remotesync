@@ -35,7 +35,7 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 	
 	
 	private int blockSize = RemoteSync.DEFAULT_BLOCK_SIZE;
-	private long rawLimit = RemoteSync.DEFAULT_RAW_LIMIT;
+	private long rawLimit = RemoteSync.MAX_RAW_LENGTH;
 	
 	private BuildCodeList() {}
 	
@@ -166,7 +166,7 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 		int blockSize = read16bit(netIn);
 		long count = read32bit(netIn);
 		read32bit(netIn); // length는 무시해도 됨. 
-		BuildCodeList bc = new BuildCodeList(blockSize, RemoteSync.DEFAULT_RAW_LIMIT);
+		BuildCodeList bc = new BuildCodeList(blockSize, RemoteSync.MAX_RAW_LENGTH);
 		while (count-- > 0) {
 			bc.add(BuildCode.unpack(netIn));
 		}		
