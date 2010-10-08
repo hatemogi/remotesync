@@ -1,31 +1,31 @@
 package net.daum.remotesync;
 
 /** 
- * ¿øº»ÆÄÀÏÀ» Á¢±ÙÇÒ ÀÎÅÍÆäÀÌ½º. {@link BuildCodeList#patch}¿¡¼­ »ç¿ëÇÑ´Ù. 
- * ÆÄÀÏ³»¿ëÀÇ Æ¯Á¤À§Ä¡¸¦ seekÇÏ°í, ¹ÙÀÌÆ®ºí·°À» ÀÐÀ» ¼ö ÀÖ´Â ¸Þ¼Òµå¸¦ ±¸ÇöÇØ¾ßÇÑ´Ù. 
+ * ì›ë³¸íŒŒì¼ì„ ì ‘ê·¼í•  ì¸í„°íŽ˜ì´ìŠ¤. {@link BuildCodeList#patch}ì—ì„œ ì‚¬ìš©í•œë‹¤. 
+ * íŒŒì¼ë‚´ìš©ì˜ íŠ¹ì •ìœ„ì¹˜ë¥¼ seekí•˜ê³ , ë°”ì´íŠ¸ë¸”ëŸ­ì„ ì½ì„ ìˆ˜ ìžˆëŠ” ë©”ì†Œë“œë¥¼ êµ¬í˜„í•´ì•¼í•œë‹¤. 
  *  
- * RandomFileAccess°´Ã¼¸¦ °¨½Î¼­ »ç¿ëÇØµµ µÈ´Ù. TenthÆÄÀÏ ÀÔ·Â½ºÆ®¸²À» ¿¬°áÇØ¼­ »ç¿ëÇÏ¸é µÈ´Ù. 
+ * RandomFileAccessê°ì²´ë¥¼ ê°ì‹¸ì„œ ì‚¬ìš©í•´ë„ ëœë‹¤. TenthíŒŒì¼ ìž…ë ¥ìŠ¤íŠ¸ë¦¼ì„ ì—°ê²°í•´ì„œ ì‚¬ìš©í•˜ë©´ ëœë‹¤. 
  * 
  * @author dante
  * @see BuildCodeList
  */
 public interface SourceFileAccess {
 	/** 
-	 * ÆÄÀÏÀÇ Æ¯Á¤ ¿ÀÇÁ¼ÂÀ¸·Î ÀÌµ¿. 
+	 * íŒŒì¼ì˜ íŠ¹ì • ì˜¤í”„ì…‹ìœ¼ë¡œ ì´ë™. 
 	 */
 	void seek(long offset);
 	
 	/**
-	 * ÇöÀç ¿ÀÇÁ¼Â¿¡¼­ ºí·°´ÜÀ§ ÀÐ±â. 
-	 * @param buf ÀÐÀº ºí·°À» ÀúÀåÇÒ ¹ÙÀÌÆ® ¹è¿­. ÀÌ ¹è¿­ÀÇ Å©±â¸¸Å­ ÀÐ´Â´Ù. 
-	 * @return ½ÇÁ¦·Î ÀÐÀº ¹ÙÀÌÆ® ¼ö. ¿äÃ»ÇÑ Å©±âº¸´Ù ÀÛ°Ô ÀÐÇûÀ» ¼ö ÀÖ´Ù. 
+	 * í˜„ìž¬ ì˜¤í”„ì…‹ì—ì„œ ë¸”ëŸ­ë‹¨ìœ„ ì½ê¸°. 
+	 * @param buf ì½ì€ ë¸”ëŸ­ì„ ì €ìž¥í•  ë°”ì´íŠ¸ ë°°ì—´. ì´ ë°°ì—´ì˜ í¬ê¸°ë§Œí¼ ì½ëŠ”ë‹¤. 
+	 * @return ì‹¤ì œë¡œ ì½ì€ ë°”ì´íŠ¸ ìˆ˜. ìš”ì²­í•œ í¬ê¸°ë³´ë‹¤ ìž‘ê²Œ ì½í˜”ì„ ìˆ˜ ìžˆë‹¤. 
 	 */
 	long read(byte[] buf);
 }
 
 
 /**
- * ¹ÙÀÌÆ® ¹è¿­À» ÀÌ¿ëÇÑ Âü°í ±¸Çö. Å×½ºÆ®ÄÉÀÌ½º¿¡¼­ »ç¿ëÇÔ. 
+ * ë°”ì´íŠ¸ ë°°ì—´ì„ ì´ìš©í•œ ì°¸ê³  êµ¬í˜„. í…ŒìŠ¤íŠ¸ì¼€ì´ìŠ¤ì—ì„œ ì‚¬ìš©í•¨. 
  * @author dante
  *
  */

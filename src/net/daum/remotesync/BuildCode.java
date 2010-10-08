@@ -8,9 +8,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * {@link SourceCodeList}¿Í ¸ñÇ¥ÆÄÀÏÀÇ Â÷ÀÌ°ªÀ» °ü¸®ÇÏ´Â ´ÜÀ§ °´Ã¼. 
- * °¢°¢ÀÇ BuildCode´Â, ¿øº»ÆÄÀÏ°ú Æ¯Á¤ ºí·°ÀÌ ÀÏÄ¡ÇÑ´Ù¸é, ÇØ´ç ºí·°ÀÇ ÀÎµ¦½º°ªÀ» º¸°üÇÑ´Ù. 
- * ÀÏÄ¡ÇÏÁö ¾Ê´Â ¿µ¿ª¿¡ ´ëÇØ¼­´Â ¹ÙÀÌÆ® ¹è¿­À» ±×´ë·Î º¸°üÇÑ´Ù. 
+ * {@link SourceCodeList}ì™€ ëª©í‘œíŒŒì¼ì˜ ì°¨ì´ê°’ì„ ê´€ë¦¬í•˜ëŠ” ë‹¨ìœ„ ê°ì²´. 
+ * ê°ê°ì˜ BuildCodeëŠ”, ì›ë³¸íŒŒì¼ê³¼ íŠ¹ì • ë¸”ëŸ­ì´ ì¼ì¹˜í•œë‹¤ë©´, í•´ë‹¹ ë¸”ëŸ­ì˜ ì¸ë±ìŠ¤ê°’ì„ ë³´ê´€í•œë‹¤. 
+ * ì¼ì¹˜í•˜ì§€ ì•ŠëŠ” ì˜ì—­ì— ëŒ€í•´ì„œëŠ” ë°”ì´íŠ¸ ë°°ì—´ì„ ê·¸ëŒ€ë¡œ ë³´ê´€í•œë‹¤. 
  * 
  * @author dante
  * @see BuildCodeList SourceCodeList
@@ -18,16 +18,16 @@ import java.io.OutputStream;
 abstract public class BuildCode implements Packable {
 	
 	/**
-	 * ¿øº»ÀÇ Æ¯Á¤ºí·°°ú ÀÏÄ¡ÇÏ´Â ¿µ¿ª¿¡ ´ëÇÑ ÄÚµå Ç¥Çö.
-	 * @param index ÀÏÄ¡ÇÏ´Â ºí·°ÀÇ ÀÎµ¦½º
+	 * ì›ë³¸ì˜ íŠ¹ì •ë¸”ëŸ­ê³¼ ì¼ì¹˜í•˜ëŠ” ì˜ì—­ì— ëŒ€í•œ ì½”ë“œ í‘œí˜„.
+	 * @param index ì¼ì¹˜í•˜ëŠ” ë¸”ëŸ­ì˜ ì¸ë±ìŠ¤
 	 */
 	public static BuildCode createRefCode(int index) {
 		return new RefBuildCode(index);
 	}
 
 	/**
-	 * ¿øº»¿¡¼­ Ã£À»¼ö ¾ø´Â µ¥ÀÌÅ¸¿µ¿ª¿¡ ´ëÇÑ ÄÚµåÇ¥Çö.
-	 * @param data ÀÏÄ¡ÇÏÁö ¾Ê´Â µ¥ÀÌÅ¸ ¹ÙÀÌÆ® ¹è¿­.
+	 * ì›ë³¸ì—ì„œ ì°¾ì„ìˆ˜ ì—†ëŠ” ë°ì´íƒ€ì˜ì—­ì— ëŒ€í•œ ì½”ë“œí‘œí˜„.
+	 * @param data ì¼ì¹˜í•˜ì§€ ì•ŠëŠ” ë°ì´íƒ€ ë°”ì´íŠ¸ ë°°ì—´.
 	 */
 	public static BuildCode createRawCode(byte[] data) {
 		return new RawBuildCode(data);
@@ -52,16 +52,16 @@ abstract public class BuildCode implements Packable {
 	
 	/**
 	 * 
-	 * @return ºôµåÄÚµåÀÇ Å©±â
+	 * @return ë¹Œë“œì½”ë“œì˜ í¬ê¸°
 	 */
 	abstract public long length();
 	
 	/** 
-	 * ¿øº»ÆÄÀÏÀ» Âü°íÇØ¼­, ¸ñÇ¥ÆÄÀÏ ¸¸µé¾î³»±â.  
-	 * @param src ¿øº»ÆÄÀÏÀ» ÀĞÀ» ¼ö ÀÖ´Â ÀÎÅÍÆäÀÌ½º
-	 * @param blockSize ºôµåÄÚµå¸¦ »ı¼ºÇÏ´Âµ¥ »ç¿ëÇÑ ºí·°Å©±â 
-	 * @param out ¸ñÇ¥ÆÄÀÏÀÌ ÀúÀåµÉ OutputStream
-	 * @return ½ÇÁ¦ ¾²¿©Áø ¹ÙÀÌÆ® ¼ö
+	 * ì›ë³¸íŒŒì¼ì„ ì°¸ê³ í•´ì„œ, ëª©í‘œíŒŒì¼ ë§Œë“¤ì–´ë‚´ê¸°.  
+	 * @param src ì›ë³¸íŒŒì¼ì„ ì½ì„ ìˆ˜ ìˆëŠ” ì¸í„°í˜ì´ìŠ¤
+	 * @param blockSize ë¹Œë“œì½”ë“œë¥¼ ìƒì„±í•˜ëŠ”ë° ì‚¬ìš©í•œ ë¸”ëŸ­í¬ê¸° 
+	 * @param out ëª©í‘œíŒŒì¼ì´ ì €ì¥ë  OutputStream
+	 * @return ì‹¤ì œ ì“°ì—¬ì§„ ë°”ì´íŠ¸ ìˆ˜
 	 * @throws IOException
 	 */
 	abstract public long patch(SourceFileAccess src, int blockSize, OutputStream out) throws IOException;
@@ -69,7 +69,7 @@ abstract public class BuildCode implements Packable {
 
 
 /**
- * ¼Ò½ºÆÄÀÏÀÇ ÂüÁ¶ºí·°À» °¡¸®Å°´Â ºôµåÄÚµå. 
+ * ì†ŒìŠ¤íŒŒì¼ì˜ ì°¸ì¡°ë¸”ëŸ­ì„ ê°€ë¦¬í‚¤ëŠ” ë¹Œë“œì½”ë“œ. 
  * @author dante
  *
  */
@@ -114,7 +114,7 @@ class RefBuildCode extends BuildCode {
 }
 
 /**
- * ¼Ò½ºÆÄÀÏ¿¡¼­ Ã£À» ¼ö ¾ø´Â µ¥ÀÌÅ¸¸¦ Ç¥ÇöÇÏ´Â ºôµåÄÚµå.
+ * ì†ŒìŠ¤íŒŒì¼ì—ì„œ ì°¾ì„ ìˆ˜ ì—†ëŠ” ë°ì´íƒ€ë¥¼ í‘œí˜„í•˜ëŠ” ë¹Œë“œì½”ë“œ.
  * @author dante
  */
 class RawBuildCode extends BuildCode {

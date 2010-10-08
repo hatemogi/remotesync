@@ -9,9 +9,9 @@ import static net.daum.remotesync.PackUtil.*;
 
 
 /**
- * ¿øº» ÆÄÀÏ·Î ºÎÅÍ °è»êÇÑ, ºí·°º° ÇØ½¬ÄÚµå ¸®½ºÆ®·Î ArrayList·Î ºí·°º° {@link Signature}¸¦ ´ã°í ÀÖ´Ù.
- * ÀÌ °´Ã¼¸¦ ±âÁØÀ¸·Î {@link BuildCodeList}¸¦ ¸¸µé¾î³¾ ¼ö ÀÖ°í, BuildCodeList¿Í SourceFileÀÌ ÀÖÀ¸¸é, 
- * ¸ñÇ¥ÆÄÀÏÀ» »ı¼ºÇØ³¾ ¼ö ÀÖ´Ù. 
+ * ì›ë³¸ íŒŒì¼ë¡œ ë¶€í„° ê³„ì‚°í•œ, ë¸”ëŸ­ë³„ í•´ì‰¬ì½”ë“œ ë¦¬ìŠ¤íŠ¸ë¡œ ArrayListë¡œ ë¸”ëŸ­ë³„ {@link Signature}ë¥¼ ë‹´ê³  ìˆë‹¤.
+ * ì´ ê°ì²´ë¥¼ ê¸°ì¤€ìœ¼ë¡œ {@link BuildCodeList}ë¥¼ ë§Œë“¤ì–´ë‚¼ ìˆ˜ ìˆê³ , BuildCodeListì™€ SourceFileì´ ìˆìœ¼ë©´, 
+ * ëª©í‘œíŒŒì¼ì„ ìƒì„±í•´ë‚¼ ìˆ˜ ìˆë‹¤. 
  * <ol>
  * <li>SourceFile => SourceCodeList</li>
  * <li>SourceCodeList + TargetFile => {@link BuildCodeList}</li>
@@ -19,33 +19,33 @@ import static net.daum.remotesync.PackUtil.*;
  * </ol>
  * 
  * <p>
- * Áï, µÎ ¿ø°İÁö°£ÀÇ ÆÄÀÏÀ» µ¿±âÈ­ÇÒ ¶§, ¾ç³¡´Ü¿¡¼­´Â »ó´ë¹æÀÇ ÆÄÀÏ³»¿ëÀ» ¸ğ¸£´Â »óÅÂ¿¡¼­, ÃÖ¼ÒÇÑÀÇ Á¤º¸¸¸ 
- * ÁÖ°í¹ŞÀ¸¸ç ÃÖ½Åº»ÀÇ ÆÄÀÏÀ» ¸¸µé¾î ³¾ ¼ö ÀÖ´Ù. 
+ * ì¦‰, ë‘ ì›ê²©ì§€ê°„ì˜ íŒŒì¼ì„ ë™ê¸°í™”í•  ë•Œ, ì–‘ëë‹¨ì—ì„œëŠ” ìƒëŒ€ë°©ì˜ íŒŒì¼ë‚´ìš©ì„ ëª¨ë¥´ëŠ” ìƒíƒœì—ì„œ, ìµœì†Œí•œì˜ ì •ë³´ë§Œ 
+ * ì£¼ê³ ë°›ìœ¼ë©° ìµœì‹ ë³¸ì˜ íŒŒì¼ì„ ë§Œë“¤ì–´ ë‚¼ ìˆ˜ ìˆë‹¤. 
  * </p>
  * 
  * <p>
- * ¿¹¸¦µé¾î, machineA°¡ ¿øº»ÆÄÀÏ srcFile¸¦ º¸°üÇÏ°í ÀÖ°í, machineB°¡ »õ·Î¿î ÆÄÀÏ newFile¸¦ ¿Ã¸®´Â »óÈ²À» »ìÆìº¸ÀÚ. 
- * (´©°¡ Å¬¶óÀÌ¾ğÆ®ÀÌ°í ¼­¹öÀÎÁöº¸´Ù, ´©°¡ ÃÖ½Åº»À» °®°íÀÖ´ÂÁö°¡ Áß¿äÇÏ´Ù.)
+ * ì˜ˆë¥¼ë“¤ì–´, machineAê°€ ì›ë³¸íŒŒì¼ srcFileë¥¼ ë³´ê´€í•˜ê³  ìˆê³ , machineBê°€ ìƒˆë¡œìš´ íŒŒì¼ newFileë¥¼ ì˜¬ë¦¬ëŠ” ìƒí™©ì„ ì‚´í´ë³´ì. 
+ * (ëˆ„ê°€ í´ë¼ì´ì–¸íŠ¸ì´ê³  ì„œë²„ì¸ì§€ë³´ë‹¤, ëˆ„ê°€ ìµœì‹ ë³¸ì„ ê°–ê³ ìˆëŠ”ì§€ê°€ ì¤‘ìš”í•˜ë‹¤.)
  * </p>
  * 
- * ÀÌ¶§, ÆÄÀÏÀ» µ¿±âÈ­ÇÏ±â À§ÇÑ ÀıÂ÷´Â ´ÙÀ½°ú °°´Ù. 
+ * ì´ë•Œ, íŒŒì¼ì„ ë™ê¸°í™”í•˜ê¸° ìœ„í•œ ì ˆì°¨ëŠ” ë‹¤ìŒê³¼ ê°™ë‹¤. 
  * <ol>
- * <li>machineA°¡ srcFile·Î ºÎÅÍ SourceCodeList¸¦ »ı¼ºÇØ¼­ machineB¿¡°Ô Àü´ŞÇÑ´Ù. 
- * <li>machineB´Â Àü´Ş¹ŞÀº SourceCodeList¿Í newFileÀÇ ³»¿ëÀ» ¹ÙÅÁÀ¸·Î {@link BuildCodeList}¸¦ ÀÛ¼ºÇØ machineA¿¡°Ô Àü´ŞÇÑ´Ù. 
- * <li>machineA´Â machineB·ÎºÎÅÍ ¹ŞÀº {@link BuildCodeList}¿Í srcFileÀÇ ³»¿ëÀ» Âü°íÇØ newFileÀ» »ı¼ºÇØ³½´Ù. 
- * <li>ÀÌ·Î½á, machineA´Â machineBÀÇ newFile°ú °°Àº ³»¿ëÀÇ ÆÄÀÏÀ» °®°Ô µÈ´Ù. 
+ * <li>machineAê°€ srcFileë¡œ ë¶€í„° SourceCodeListë¥¼ ìƒì„±í•´ì„œ machineBì—ê²Œ ì „ë‹¬í•œë‹¤. 
+ * <li>machineBëŠ” ì „ë‹¬ë°›ì€ SourceCodeListì™€ newFileì˜ ë‚´ìš©ì„ ë°”íƒ•ìœ¼ë¡œ {@link BuildCodeList}ë¥¼ ì‘ì„±í•´ machineAì—ê²Œ ì „ë‹¬í•œë‹¤. 
+ * <li>machineAëŠ” machineBë¡œë¶€í„° ë°›ì€ {@link BuildCodeList}ì™€ srcFileì˜ ë‚´ìš©ì„ ì°¸ê³ í•´ newFileì„ ìƒì„±í•´ë‚¸ë‹¤. 
+ * <li>ì´ë¡œì¨, machineAëŠ” machineBì˜ newFileê³¼ ê°™ì€ ë‚´ìš©ì˜ íŒŒì¼ì„ ê°–ê²Œ ëœë‹¤. 
  * </ol>
  * 
  * <p>
- * Áï, machineA¿Í machineB°¡ ÁÖ°í¹Ş´Â µ¥ÀÌÅ¸´Â SourceCodeList¿Í BuildCodeList»ÓÀÌ¸ç, srcFile°ú newFile°£
- * ³»¿ëÀÇ ÀÏÄ¡ºÎºĞÀÌ ¸¹À» ¼ö·Ï ÇØ´çµ¥ÀÌÅÍÀÇ Å©±â´Â ÀÛ¾ÆÁø´Ù. Å©±â°¡ ÀÛÀ¸¸é ÀÛÀ» ¼ö·Ï, machineB°¡ newFileÀÇ ³»¿ë
- * ÀüÃ¼¸¦ machineA¿¡°Ô Àü¼ÛÇÏ´Â °æ¿ì¿¡ ºñÇØ ³×Æ®¿öÅ© ¼Û¼ö½Å µ¥ÀÌÅ¸ Å©±â°¡ ÀÛ¾ÆÁø´Ù. 
+ * ì¦‰, machineAì™€ machineBê°€ ì£¼ê³ ë°›ëŠ” ë°ì´íƒ€ëŠ” SourceCodeListì™€ BuildCodeListë¿ì´ë©°, srcFileê³¼ newFileê°„
+ * ë‚´ìš©ì˜ ì¼ì¹˜ë¶€ë¶„ì´ ë§ì„ ìˆ˜ë¡ í•´ë‹¹ë°ì´í„°ì˜ í¬ê¸°ëŠ” ì‘ì•„ì§„ë‹¤. í¬ê¸°ê°€ ì‘ìœ¼ë©´ ì‘ì„ ìˆ˜ë¡, machineBê°€ newFileì˜ ë‚´ìš©
+ * ì „ì²´ë¥¼ machineAì—ê²Œ ì „ì†¡í•˜ëŠ” ê²½ìš°ì— ë¹„í•´ ë„¤íŠ¸ì›Œí¬ ì†¡ìˆ˜ì‹  ë°ì´íƒ€ í¬ê¸°ê°€ ì‘ì•„ì§„ë‹¤. 
  * </p>
  * <p>
- * ³×Æ®¿öÅ©»ó ¼Û¼ö½ÅÃ³¸®¸¦ À§ÇØ {@link #pack}/{@link #unpack} ¸Ş¼Òµå¸¦ ±¸ÇöÇß´Ù. 
+ * ë„¤íŠ¸ì›Œí¬ìƒ ì†¡ìˆ˜ì‹ ì²˜ë¦¬ë¥¼ ìœ„í•´ {@link #pack}/{@link #unpack} ë©”ì†Œë“œë¥¼ êµ¬í˜„í–ˆë‹¤. 
  * </p>
  * <p>
- * ÇØ´ç ¾Ë°í¸®ÁòÀº RsyncÀÇ ³í¹®À» Åä´ë·Î ±×´ë·Î ±¸ÇöÇß´Ù.  
+ * í•´ë‹¹ ì•Œê³ ë¦¬ì¦˜ì€ Rsyncì˜ ë…¼ë¬¸ì„ í† ëŒ€ë¡œ ê·¸ëŒ€ë¡œ êµ¬í˜„í–ˆë‹¤.  
  * </p>
  * @author dante
  * @see Signature
@@ -64,11 +64,11 @@ public class SourceCodeList extends ArrayList<Signature> {
 	}
 	
 	/**
-	 * ¿øº»ÆÄÀÏ·Î ºÎÅÍ ÇØ½¬ÄÚµå¸®½ºÆ®¸¦ »ı¼ºÇÑ´Ù. ¿øº»ÆÄÀÏÀ» ÁöÁ¤µÈ ºí·°Å©±â¸¸Å­ ÀĞÀ¸¸ç 
-	 * {@link Signature}¸¦ »ı¼ºÇØ¼­ ³ª¿­ÇÑ´Ù.  
-	 * @param in ¿øº»ÆÄÀÏÀÇ InputStream
-	 * @param blockSize ºí·°Å©±â (4096) 
-	 * @return ºí·°º° {@link Signature}°´Ã¼°¡ Ãß°¡µÈ {@link SourceCodeList}
+	 * ì›ë³¸íŒŒì¼ë¡œ ë¶€í„° í•´ì‰¬ì½”ë“œë¦¬ìŠ¤íŠ¸ë¥¼ ìƒì„±í•œë‹¤. ì›ë³¸íŒŒì¼ì„ ì§€ì •ëœ ë¸”ëŸ­í¬ê¸°ë§Œí¼ ì½ìœ¼ë©° 
+	 * {@link Signature}ë¥¼ ìƒì„±í•´ì„œ ë‚˜ì—´í•œë‹¤.  
+	 * @param in ì›ë³¸íŒŒì¼ì˜ InputStream
+	 * @param blockSize ë¸”ëŸ­í¬ê¸° (4096) 
+	 * @return ë¸”ëŸ­ë³„ {@link Signature}ê°ì²´ê°€ ì¶”ê°€ëœ {@link SourceCodeList}
 	 * @throws IOException
 	 */
 	public static final SourceCodeList create(InputStream in, int blockSize) throws IOException {
@@ -84,8 +84,8 @@ public class SourceCodeList extends ArrayList<Signature> {
 	}
 
 	/**
-	 * ÇØ½¬ÄÚµå¸¦ »ı¼ºÇÏ´Âµ¥ »ç¿ëµÈ ºí·°Å©±â. ÀÌÈÄ ÀÛ¾÷ÀÇ ±âÁØÁ¡ÀÌ µÈ´Ù. 
-	 * @return ºí·°Å©±â ¹ÙÀÌÆ® ¼ö
+	 * í•´ì‰¬ì½”ë“œë¥¼ ìƒì„±í•˜ëŠ”ë° ì‚¬ìš©ëœ ë¸”ëŸ­í¬ê¸°. ì´í›„ ì‘ì—…ì˜ ê¸°ì¤€ì ì´ ëœë‹¤. 
+	 * @return ë¸”ëŸ­í¬ê¸° ë°”ì´íŠ¸ ìˆ˜
 	 */
 	public int getBlockSize() {
 		return blockSize;
@@ -93,9 +93,9 @@ public class SourceCodeList extends ArrayList<Signature> {
 
 	
 	/**
-	 * ³×Æ®¿öÅ©¿¡¼­ ¼ö½ÅÇÑ binary data·Î ºÎÅÍ SourceCodeList ¸¸µé±â. 
-	 * @param in packÀ¸·Î ÀúÀåµÈ binary data (¾Æ¸¶µµ ³×Æ®¿öÅ©·Î ¼ö½ÅÇßÀ» ½ºÆ®¸²)
-	 * @return ÇØ´ç µ¥ÀÌÅ¸¿¡¼­ ÃßÃâµÈ SourceCodeList.
+	 * ë„¤íŠ¸ì›Œí¬ì—ì„œ ìˆ˜ì‹ í•œ binary dataë¡œ ë¶€í„° SourceCodeList ë§Œë“¤ê¸°. 
+	 * @param in packìœ¼ë¡œ ì €ì¥ëœ binary data (ì•„ë§ˆë„ ë„¤íŠ¸ì›Œí¬ë¡œ ìˆ˜ì‹ í–ˆì„ ìŠ¤íŠ¸ë¦¼)
+	 * @return í•´ë‹¹ ë°ì´íƒ€ì—ì„œ ì¶”ì¶œëœ SourceCodeList.
 	 * @throws IOException
 	 */
 	public static final SourceCodeList unpack(InputStream in) throws IOException {
@@ -113,9 +113,9 @@ public class SourceCodeList extends ArrayList<Signature> {
 	}
 	
 	/**
-	 * ³×Æ®¿öÅ©·Î ¼Û½ÅÇÏ±â À§ÇÑ binary data ¸¸µé±â.
-	 * @param out ¹ÙÀÌ³Ê¸® µ¥ÀÌÅ¸¸¦ ¾µ OutputStream (ÁÖ·Î, ³×Æ®¿öÅ© ¾Æ¿ôÇ²½ºÆ®¸²)
-	 * @return ¾´ ¹ÙÀÌÆ® ¼ö 
+	 * ë„¤íŠ¸ì›Œí¬ë¡œ ì†¡ì‹ í•˜ê¸° ìœ„í•œ binary data ë§Œë“¤ê¸°.
+	 * @param out ë°”ì´ë„ˆë¦¬ ë°ì´íƒ€ë¥¼ ì“¸ OutputStream (ì£¼ë¡œ, ë„¤íŠ¸ì›Œí¬ ì•„ì›ƒí’‹ìŠ¤íŠ¸ë¦¼)
+	 * @return ì“´ ë°”ì´íŠ¸ ìˆ˜ 
 	 * @throws IOException
 	 */
 	public long pack(OutputStream out) throws IOException {
@@ -132,11 +132,11 @@ public class SourceCodeList extends ArrayList<Signature> {
 	}
 	
 	/**
-	 * ¸ñÇ¥ÆÄÀÏÀ» ÀĞ¾î¼­, ¼Ò½ºÄÚµå¿ÍÀÇ Â÷ÀÌÁ¡ ºĞ¼®.
-	 * @param newFileIn ¸ñÇ¥ÆÄÀÏÀÇ InputStream
-	 * @param rawLimit ÀÏÄ¡ÇÏÁö ¾Ê´Â ºÎºĞÀÇ ÃÖ´ëÅ©±â. ÇöÀç binary Æ÷¸ËÀÇ Á¦ÇÑÀ¸·Î, ÃÖ´ë 4MB¹Ì¸¸±îÁö Ç¥ÇöÇÒ ¼ö ÀÖ´Ù.  
-	 *                 ÃÖ´ëÅ©±âÀÌ»óÀÇ ºÎºĞÀÌ ¹ß°ßµÇ¸é, µÎ°³ÀÌ»óÀÇ ºôµåÄÚµå·Î ÂÉ°³¾î ÀúÀåÇÑ´Ù.
-	 * @return »ı¼ºµÈ {@link BuildCodeList}
+	 * ëª©í‘œíŒŒì¼ì„ ì½ì–´ì„œ, ì†ŒìŠ¤ì½”ë“œì™€ì˜ ì°¨ì´ì  ë¶„ì„.
+	 * @param newFileIn ëª©í‘œíŒŒì¼ì˜ InputStream
+	 * @param rawLimit ì¼ì¹˜í•˜ì§€ ì•ŠëŠ” ë¶€ë¶„ì˜ ìµœëŒ€í¬ê¸°. í˜„ì¬ binary í¬ë§·ì˜ ì œí•œìœ¼ë¡œ, ìµœëŒ€ 4MBë¯¸ë§Œê¹Œì§€ í‘œí˜„í•  ìˆ˜ ìˆë‹¤.  
+	 *                 ìµœëŒ€í¬ê¸°ì´ìƒì˜ ë¶€ë¶„ì´ ë°œê²¬ë˜ë©´, ë‘ê°œì´ìƒì˜ ë¹Œë“œì½”ë“œë¡œ ìª¼ê°œì–´ ì €ì¥í•œë‹¤.
+	 * @return ìƒì„±ëœ {@link BuildCodeList}
 	 * @throws IOException
 	 */
 	public BuildCodeList generateBuildCodes(InputStream newFileIn, long rawLimit) throws IOException {
@@ -144,9 +144,9 @@ public class SourceCodeList extends ArrayList<Signature> {
 	}
 	
 	/**
-	 * ¸ñÇ¥ÆÄÀÏÀ» ÀĞ¾î¼­, ¼Ò½ºÄÚµå¿ÍÀÇ Â÷ÀÌÁ¡ ºĞ¼®. ÀÏÄ¡ÇÏÁö ¾Ê´Â ºÎºĞÀÇ ÃÖ´ëÅ©±â´Â 4MB - 1byte·Î ÃÖ´ë°ª ÁöÁ¤.
-	 * @param targetFileIn ¸ñÇ¥ÆÄÀÏ InputStream
-	 * @return »ı¼ºµÈ {@link BuildCodeList}
+	 * ëª©í‘œíŒŒì¼ì„ ì½ì–´ì„œ, ì†ŒìŠ¤ì½”ë“œì™€ì˜ ì°¨ì´ì  ë¶„ì„. ì¼ì¹˜í•˜ì§€ ì•ŠëŠ” ë¶€ë¶„ì˜ ìµœëŒ€í¬ê¸°ëŠ” 4MB - 1byteë¡œ ìµœëŒ€ê°’ ì§€ì •.
+	 * @param targetFileIn ëª©í‘œíŒŒì¼ InputStream
+	 * @return ìƒì„±ëœ {@link BuildCodeList}
 	 * @throws IOException
 	 */
 	public BuildCodeList generateBuildCodes(InputStream targetFileIn) throws IOException {

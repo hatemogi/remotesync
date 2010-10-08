@@ -16,9 +16,9 @@ import java.util.Map;
 
 
 /**
- * {@link SourceCodeList}¿Í ¸ñÇ¥ÆÄÀÏ(newFileIn)À» Åä´ë·Î »ı¼ºÇÑ ºôµåÄÚµå ¸®½ºÆ®. 
- * ÀÌ °´Ã¼¿Í ¿øº»ÆÄÀÏÀÇ ³»¿ëÀ» ÇÕÃÄ¼­, ÀüÃ¼³»¿ëÀ» Àü¼Û¹ŞÁö ¾Ê°íµµ, ¸ñÇ¥ÆÄÀÏ(newFile)À» 
- * ¸¸µé¾î ³¾ ¼ö ÀÖ´Ù.
+ * {@link SourceCodeList}ì™€ ëª©í‘œíŒŒì¼(newFileIn)ì„ í† ëŒ€ë¡œ ìƒì„±í•œ ë¹Œë“œì½”ë“œ ë¦¬ìŠ¤íŠ¸. 
+ * ì´ ê°ì²´ì™€ ì›ë³¸íŒŒì¼ì˜ ë‚´ìš©ì„ í•©ì³ì„œ, ì „ì²´ë‚´ìš©ì„ ì „ì†¡ë°›ì§€ ì•Šê³ ë„, ëª©í‘œíŒŒì¼(newFile)ì„ 
+ * ë§Œë“¤ì–´ ë‚¼ ìˆ˜ ìˆë‹¤.
  * 
  * <li>{@link SourceCodeList} + newFile => BuildCodeList</li>
  * <li>{@link BuildCodeList} + srcFile => newFile<li>
@@ -46,7 +46,7 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 	
 
 	/**
-	 * ºí·°Å©±â. SourceCodeListÀÇ ºí·°Å©±â¿Í °°¾Æ¾ßÇÑ´Ù. 
+	 * ë¸”ëŸ­í¬ê¸°. SourceCodeListì˜ ë¸”ëŸ­í¬ê¸°ì™€ ê°™ì•„ì•¼í•œë‹¤. 
 	 */
 	public int getBlockSize() {
 		return blockSize;
@@ -78,11 +78,11 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 	
 
 	/**
-	 * {@link SourceCodeList}¿Í ¸ñÇ¥ÆÄÀÏ(newFileIn)À» ÀÌ¿ëÇØ BuildCodeList »ı¼ºÇÏ±â. 
+	 * {@link SourceCodeList}ì™€ ëª©í‘œíŒŒì¼(newFileIn)ì„ ì´ìš©í•´ BuildCodeList ìƒì„±í•˜ê¸°. 
 	 * @param sourceCodeList 
-	 * @param newFileIn ¸ñÇ¥ÆÄÀÏÀÇ InputStream
-	 * @param rawLimit ¹ÙÀÌ³Ê¸® Æ÷¸ËÀ» À§ÇØ Á¦ÇÑµÈ °ª. ÃÖ´ë (4M-1)ÀÇ ±âº»°ªÀ» »ç¿ëÇÒ ¼ö ÀÖ´Ù. 
-	 * @return »ı¼ºµÈ BulidCodeList
+	 * @param newFileIn ëª©í‘œíŒŒì¼ì˜ InputStream
+	 * @param rawLimit ë°”ì´ë„ˆë¦¬ í¬ë§·ì„ ìœ„í•´ ì œí•œëœ ê°’. ìµœëŒ€ (4M-1)ì˜ ê¸°ë³¸ê°’ì„ ì‚¬ìš©í•  ìˆ˜ ìˆë‹¤. 
+	 * @return ìƒì„±ëœ BulidCodeList
 	 * @throws IOException
 	 */
 	static final BuildCodeList create(SourceCodeList sourceCodeList, InputStream newFileIn, long rawLimit) throws IOException {
@@ -134,9 +134,9 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 	}
 
 	/** 
-	 * ³×Æ®¿öÅ©·Î º¸³»±â À§ÇØ BinaryÆ÷¸ËÀ¸·Î º¯È¯ÇÏ±â. 
-	 * @param netOut º¯È¯ÇÑ µ¥ÀÌÅ¸¸¦ ÀúÀåÇÒ ³×Æ®¿öÅ© Ãâ·Â½ºÆ®¸².
-	 * @return Ãâ·ÂÇÑ ¹ÙÀÌÆ® ¼ö
+	 * ë„¤íŠ¸ì›Œí¬ë¡œ ë³´ë‚´ê¸° ìœ„í•´ Binaryí¬ë§·ìœ¼ë¡œ ë³€í™˜í•˜ê¸°. 
+	 * @param netOut ë³€í™˜í•œ ë°ì´íƒ€ë¥¼ ì €ì¥í•  ë„¤íŠ¸ì›Œí¬ ì¶œë ¥ìŠ¤íŠ¸ë¦¼.
+	 * @return ì¶œë ¥í•œ ë°”ì´íŠ¸ ìˆ˜
 	 * @throws IOException
 	 */
 	public long pack(OutputStream netOut) throws IOException {
@@ -153,9 +153,9 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 	}
 
 	/**
-	 * ³×Æ®¿öÅ©·Î ¼ö½ÅÇÑ Binary Æ÷¸ËÀ¸·ÎºÎÅÍ BuildCodeList¸¸µé¾î ³»±â.
-	 * @param netIn ¹ÙÀÌ³Ê¸® Æ÷¸ËÀÌ ´ã°ÜÀÖ´Â ³×Æ®¿öÅ© ÀÔ·Â½ºÆ®¸².
-	 * @return ºĞ¼®ÇØ³½ BuildCodeList
+	 * ë„¤íŠ¸ì›Œí¬ë¡œ ìˆ˜ì‹ í•œ Binary í¬ë§·ìœ¼ë¡œë¶€í„° BuildCodeListë§Œë“¤ì–´ ë‚´ê¸°.
+	 * @param netIn ë°”ì´ë„ˆë¦¬ í¬ë§·ì´ ë‹´ê²¨ìˆëŠ” ë„¤íŠ¸ì›Œí¬ ì…ë ¥ìŠ¤íŠ¸ë¦¼.
+	 * @return ë¶„ì„í•´ë‚¸ BuildCodeList
 	 * @throws IOException
 	 */
 	public static final BuildCodeList unpack(InputStream netIn) throws IOException {
@@ -165,7 +165,7 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 		}
 		int blockSize = read16bit(netIn);
 		long count = read32bit(netIn);
-		read32bit(netIn); // length´Â ¹«½ÃÇØµµ µÊ. 
+		read32bit(netIn); // lengthëŠ” ë¬´ì‹œí•´ë„ ë¨. 
 		BuildCodeList bc = new BuildCodeList(blockSize, RemoteSync.DEFAULT_RAW_LIMIT);
 		while (count-- > 0) {
 			bc.add(BuildCode.unpack(netIn));

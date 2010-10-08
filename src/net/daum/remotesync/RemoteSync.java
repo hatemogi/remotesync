@@ -1,7 +1,7 @@
 package net.daum.remotesync;
 
 /** 
- * ÆĞÅ°Áö »ó¼ö°ª.
+ * íŒ¨í‚¤ì§€ ìƒìˆ˜ê°’.
  * @author dante
  */
 public interface RemoteSync {

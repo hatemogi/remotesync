@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /** 
- * ³×Æ®¿öÅ©·Î ¼Û¼ö½ÅÇÒ¶§ »ç¿ëÇÒ ÀÎÅÍÆäÀÌ½º. ¹Ì¸®Á¤ÇÑ ¹ÙÀÌ³Ê¸® Æ÷¸ËÀ¸·Î º¯È¯ÇÏ´Âµ¥ »ç¿ë. 
+ * ë„¤íŠ¸ì›Œí¬ë¡œ ì†¡ìˆ˜ì‹ í• ë•Œ ì‚¬ìš©í•  ì¸í„°íŽ˜ì´ìŠ¤. ë¯¸ë¦¬ì •í•œ ë°”ì´ë„ˆë¦¬ í¬ë§·ìœ¼ë¡œ ë³€í™˜í•˜ëŠ”ë° ì‚¬ìš©. 
  * @author dante
  *
  */

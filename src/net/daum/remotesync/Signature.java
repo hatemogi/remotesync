@@ -11,7 +11,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * ºí·°´ÜÀ§º° ÇØ½¬ÄÚµå. ºü¸¥ °è»êÀ» À§ÇÑ 32ºñÆ® ÇØ½¬°ª°ú, Á¤È®ÇÑ °è»êÀ» À§ÇÑ SHA1 ÇØ½¬°ªÀ» ÇÔ²² °ü¸®ÇÑ´Ù. 
+ * ë¸”ëŸ­ë‹¨ìœ„ë³„ í•´ì‰¬ì½”ë“œ. ë¹ ë¥¸ ê³„ì‚°ì„ ìœ„í•œ 32ë¹„íŠ¸ í•´ì‰¬ê°’ê³¼, ì •í™•í•œ ê³„ì‚°ì„ ìœ„í•œ SHA1 í•´ì‰¬ê°’ì„ í•¨ê»˜ ê´€ë¦¬í•œë‹¤. 
  *   
  * @author dante
  *
@@ -22,9 +22,9 @@ public class Signature {
 	private byte[] content = null;
 	
 	/**
-	 * ºü¸¥ ¼ÓµµÀÇ ÇØ½¬ÄÚµå °è»ê. Rsync³í¹®¿¡ ¼Ò°³µÈ Adler-32¿Í À¯»çÇÑ ¾Ë°í¸®Áò. ÃßÈÄ Rolling SignatureÀû¿ëÀÌ °¡´ÉÇÏ´Ù. 
-	 * @param buf ÇØ½¬ÄÚµå¸¦ °è»êÇÒ µ¥ÀÌÅ¸
-	 * @return 32ºñÆ® ÇØ½¬ÄÚµå
+	 * ë¹ ë¥¸ ì†ë„ì˜ í•´ì‰¬ì½”ë“œ ê³„ì‚°. Rsyncë…¼ë¬¸ì— ì†Œê°œëœ Adler-32ì™€ ìœ ì‚¬í•œ ì•Œê³ ë¦¬ì¦˜. ì¶”í›„ Rolling Signatureì ìš©ì´ ê°€ëŠ¥í•˜ë‹¤. 
+	 * @param buf í•´ì‰¬ì½”ë“œë¥¼ ê³„ì‚°í•  ë°ì´íƒ€
+	 * @return 32ë¹„íŠ¸ í•´ì‰¬ì½”ë“œ
 	 */
 	public static int fastSignature(byte[] buf) {
 		int a = 0, b = 0;
@@ -39,9 +39,9 @@ public class Signature {
 	}
 	
 	/**
-	 * Á¤È®ÇÑ °è»êÀ» À§ÇÑ SHA1 ÇØ½¬ÄÚµå. 
-	 * @param buf ÇØ½¬ÄÚµå¸¦ °è»êÇÒ µ¥ÀÌÅ¸
-	 * @return 160bit SHA1 ÇØ½¬ÄÚµå °ª
+	 * ì •í™•í•œ ê³„ì‚°ì„ ìœ„í•œ SHA1 í•´ì‰¬ì½”ë“œ. 
+	 * @param buf í•´ì‰¬ì½”ë“œë¥¼ ê³„ì‚°í•  ë°ì´íƒ€
+	 * @return 160bit SHA1 í•´ì‰¬ì½”ë“œ ê°’
 	 */
 	public static byte[] strongSignature(byte[] buf) {
 		try {
@@ -55,15 +55,15 @@ public class Signature {
 	private Signature() {}
 	
 	/**
-	 * µ¥ÀÌÅ¸ ¿øº»À¸·Î ºÎÅÍ ÇØ½¬ÄÚµå °´Ã¼¸¦ ÁØºñÇÑ´Ù. ¾ÆÁ÷ ÇØ½¬°ª °è»êÀº ÇÏÁö ¾Ê´Â´Ù. 
-	 * @param content ¿øº»
+	 * ë°ì´íƒ€ ì›ë³¸ìœ¼ë¡œ ë¶€í„° í•´ì‰¬ì½”ë“œ ê°ì²´ë¥¼ ì¤€ë¹„í•œë‹¤. ì•„ì§ í•´ì‰¬ê°’ ê³„ì‚°ì€ í•˜ì§€ ì•ŠëŠ”ë‹¤. 
+	 * @param content ì›ë³¸
 	 */
 	public Signature(byte[] content) {
 		this.content = content.clone();
 	}
 	
 	/**
-	 * ºü¸¥ ÇØ½¬ÄÚµå °è»ê (Adler-32¿Í À¯»ç)
+	 * ë¹ ë¥¸ í•´ì‰¬ì½”ë“œ ê³„ì‚° (Adler-32ì™€ ìœ ì‚¬)
 	 * @return
 	 */
 	public int getFast() {
@@ -72,7 +72,7 @@ public class Signature {
 	}
 
 	/**
-	 * Á¤È®ÇÑ ÇØ½¬ÄÚµå °è»ê (SHA1)
+	 * ì •í™•í•œ í•´ì‰¬ì½”ë“œ ê³„ì‚° (SHA1)
 	 * @return
 	 */
 	public byte[] getStrong() {
@@ -81,7 +81,7 @@ public class Signature {
 	}
 	
 	/**
-	 * SHA1 ÇØ½¬ÄÚµå°ªÀ» È­¸é¿¡ º¸ÀÏ ¼ö ÀÖ°Ô Base64 ¹®ÀÚ¿­·Î º¯È¯ 
+	 * SHA1 í•´ì‰¬ì½”ë“œê°’ì„ í™”ë©´ì— ë³´ì¼ ìˆ˜ ìˆê²Œ Base64 ë¬¸ìì—´ë¡œ ë³€í™˜ 
 	 * @return base64 encoded string
 	 */
 	public String getStrongBase64() {
