@@ -13,9 +13,9 @@ import static net.daum.remotesync.PackUtil.*;
  * 이 객체를 기준으로 {@link BuildCodeList}를 만들어낼 수 있고, BuildCodeList와 SourceFile이 있으면, 
  * 목표파일을 생성해낼 수 있다. 
  * <ol>
- * <li>SourceFile => SourceCodeList</li>
- * <li>SourceCodeList + TargetFile => {@link BuildCodeList}</li>
- * <li>{@link BuildCodeList} + SourceFile => TargetFile</li>
+ * <li>SourceFile → SourceCodeList</li>
+ * <li>SourceCodeList + TargetFile → {@link BuildCodeList}</li>
+ * <li>{@link BuildCodeList} + SourceFile → TargetFile</li>
  * </ol>
  * 
  * <p>
@@ -30,8 +30,8 @@ import static net.daum.remotesync.PackUtil.*;
  * 
  * 이때, 파일을 동기화하기 위한 절차는 다음과 같다. 
  * <ol>
- * <li>machineA가 srcFile로 부터 SourceCodeList를 생성해서 machineB에게 전달한다. 
- * <li>machineB는 전달받은 SourceCodeList와 newFile의 내용을 바탕으로 {@link BuildCodeList}를 작성해 machineA에게 전달한다. 
+ * <li>machineA가 srcFile로 부터 SourceCodeList를 생성 → machineB에게 전달한다. 
+ * <li>machineB는 전달받은 SourceCodeList와 newFile의 내용을 바탕으로 {@link BuildCodeList}를 작성 → machineA에게 전달한다. 
  * <li>machineA는 machineB로부터 받은 {@link BuildCodeList}와 srcFile의 내용을 참고해 newFile을 생성해낸다. 
  * <li>이로써, machineA는 machineB의 newFile과 같은 내용의 파일을 갖게 된다. 
  * </ol>

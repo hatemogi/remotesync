@@ -20,8 +20,8 @@ import java.util.Map;
  * 이 객체와 원본파일의 내용을 합쳐서, 전체내용을 전송받지 않고도, 목표파일(newFile)을 
  * 만들어 낼 수 있다.
  * 
- * <li>{@link SourceCodeList} + newFile => BuildCodeList</li>
- * <li>{@link BuildCodeList} + srcFile => newFile<li>
+ * <li>{@link SourceCodeList} + newFile → BuildCodeList</li>
+ * <li>{@link BuildCodeList} + srcFile → newFile<li>
  *
  * @see SourceCodeList
  * @author dante
