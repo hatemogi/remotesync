@@ -38,6 +38,13 @@ public class Signature {
 		return (b << 16) | a;
 	}
 	
+	public static int rollingSignature(int prev_a, int prev_b, int adding, int deleting) {
+//	    *a = (*a - deleting + adding) & 0xFFFF;
+//	    *b = (*b - (size * deleting) + *a) & 0xFFFF;
+//	    return (*b << 16) | *a;
+	    return 0;
+	}
+	
 	/**
 	 * 정확한 계산을 위한 SHA1 해쉬코드. 
 	 * @param buf 해쉬코드를 계산할 데이타

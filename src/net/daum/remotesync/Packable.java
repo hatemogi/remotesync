@@ -17,7 +17,7 @@ public interface Packable {
 final class PackUtil {
 
 	static final void write16bit(OutputStream out, int i) throws IOException {
-		out.write((i & 0xFF00) >> 16);
+		out.write((i & 0xFF00) >> 8);
 		out.write(i & 0xFF);
 	}
 	

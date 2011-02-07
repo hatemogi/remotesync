@@ -62,6 +62,20 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 		return table;
 	}
 	
+	private static Map<Integer, Map<String, Integer>> generateRefTable2(SourceCodeList sc) {
+		Map<Integer, Map<String, Integer>> table = new HashMap<Integer, Map<String, Integer>>();
+		int idx = 0;
+		for (Signature sign: sc) {
+			Map<String, Integer> row = table.get(sign.getFast()); 
+			if (row == null) {
+				row = new HashMap<String, Integer>();
+				table.put(sign.getFast(), row);
+			} 
+			row.put(sign.getStrongBase64(), idx++);
+		}
+		return table;
+	}
+	
 	private void processRawCodeIfNeeded(ByteArrayOutputStream rawbuf) {
 		if (rawbuf.size() > 0) {
 			add(BuildCode.createRawCode(rawbuf.toByteArray()));
@@ -89,7 +103,8 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 		final int blockSize = sourceCodeList.getBlockSize();
 		BuildCodeList bc = new BuildCodeList(blockSize, rawLimit);
 		
-		Map<String, Integer> table = generateRefTable(sourceCodeList);
+		// Map<String, Integer> table = generateRefTable(sourceCodeList);
+		Map<Integer, Map<String, Integer>> table2 = generateRefTable2(sourceCodeList);
 		
 		PushbackInputStream pin = new PushbackInputStream(newFileIn, blockSize);
 		byte[] buf = new byte[blockSize];
@@ -102,7 +117,12 @@ public class BuildCodeList extends ArrayList<BuildCode> {
 				}
 			} else {
 				Signature sign = new Signature(buf);
-				Integer idx = table.get(new String(sign.getStrong()));
+//				Integer idx = table.get(new String(sign.getStrong()));
+				Integer idx = null;
+				Map<String,Integer> row = table2.get(sign.getFast());
+				if (row != null) {
+					idx = row.get(sign.getStrongBase64());
+				}
 				if (idx != null) {
 					bc.processRawCodeIfNeeded(rawbuf);
 					bc.add(BuildCode.createRefCode(idx));

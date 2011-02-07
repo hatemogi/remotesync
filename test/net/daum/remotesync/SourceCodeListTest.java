@@ -4,10 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-
-import net.daum.remotesync.Signature;
-import net.daum.remotesync.SourceCodeList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,5 +51,17 @@ public class SourceCodeListTest extends TestUtils {
 			assertEquals(Signature.fastSignature("345".getBytes()), unpacked.get(1).getFast());
 		}
 		
-	}	
+	}
+	
+	@Test
+	public void testPackSampleFile() throws Exception {
+		long ts = System.currentTimeMillis();
+		FileInputStream fin = new FileInputStream("scala-2.8.0.final.tar");
+		FileOutputStream out = new FileOutputStream("scala-2.8.0.sourcecodes");
+		System.out.println(SourceCodeList.create(fin, 4096).pack(out));
+		out.close();
+		fin.close();
+		System.out.println("generating SourceCodeList in msec: " + (System.currentTimeMillis() - ts));
+		
+	}
 }

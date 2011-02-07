@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.junit.Before;
@@ -53,7 +55,29 @@ public class BuildCodeListTest extends TestUtils {
 		assertEquals(dst.length(), out.size());
 		assertEquals(dst, out.toString());
 	}
-	
+
+	@Test
+	public void testPatchSampleFile() throws Exception {
+		long ts = System.currentTimeMillis();
+		FileInputStream sourceCodeIn = new FileInputStream("scala-2.8.0.sourcecodes");
+		SourceCodeList sc = SourceCodeList.unpack(sourceCodeIn);
+		sourceCodeIn.close();
+		
+		System.out.println("unpacking SourceCodeList in msec: " + (System.currentTimeMillis() - ts));
+		ts = System.currentTimeMillis();
+		FileInputStream newFileIn = new FileInputStream("scala-2.8.1.RC2.tar");
+		BuildCodeList bc = sc.generateBuildCodes(newFileIn);
+		
+		System.out.println("generating BuildCodeList in msec: " + (System.currentTimeMillis() - ts));
+		FileOutputStream buildCodesOut = new FileOutputStream("scala-2.8.1.RC2.buildcodes");
+		bc.pack(buildCodesOut);
+		ts = System.currentTimeMillis();
+		FileOutputStream patchedFileOut = new FileOutputStream("scala-patched.tar");
+		bc.patch(new SourceRandomFileAccess("scala-2.8.0.final.tar"), patchedFileOut);
+		System.out.println("generating patchedFile in msec: " + (System.currentTimeMillis() - ts));
+		patchedFileOut.close();
+	}
+
 	
 	@Test
 	public void testPackAndUnpack() throws IOException {
@@ -87,5 +111,8 @@ public class BuildCodeListTest extends TestUtils {
 		}
 		
 	}	
+	
+	
+	
 
 }
