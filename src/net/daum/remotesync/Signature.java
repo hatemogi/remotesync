@@ -4,11 +4,12 @@ import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import static net.daum.remotesync.PackUtil.read32bit;
 import static net.daum.remotesync.PackUtil.write32bit;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+// TODO: use MessageUpdate for CheckSum.
 
 /**
  * 블럭단위별 해쉬코드. 빠른 계산을 위한 32비트 해쉬값과, 정확한 계산을 위한 SHA1 해쉬값을 함께 관리한다. 
@@ -17,9 +18,9 @@ import java.security.NoSuchAlgorithmException;
  *
  */
 public class Signature {
-	private Integer fast = null;
+	private Long fast = null;
 	private byte[] strong = null;
-	private byte[] content = null;
+	public byte[] content = null;
 	
 	/**
 	 * 빠른 속도의 해쉬코드 계산. Rsync논문에 소개된 Adler-32와 유사한 알고리즘. 추후 Rolling Signature적용이 가능하다. 
@@ -38,12 +39,8 @@ public class Signature {
 		return (b << 16) | a;
 	}
 	
-	public static int rollingSignature(int prev_a, int prev_b, int adding, int deleting) {
-//	    *a = (*a - deleting + adding) & 0xFFFF;
-//	    *b = (*b - (size * deleting) + *a) & 0xFFFF;
-//	    return (*b << 16) | *a;
-	    return 0;
-	}
+	
+
 	
 	/**
 	 * 정확한 계산을 위한 SHA1 해쉬코드. 
@@ -59,7 +56,7 @@ public class Signature {
 		}
 	}
 	
-	private Signature() {}
+	protected Signature() {}
 	
 	/**
 	 * 데이타 원본으로 부터 해쉬코드 객체를 준비한다. 아직 해쉬값 계산은 하지 않는다. 
@@ -74,8 +71,8 @@ public class Signature {
 	 * @return
 	 */
 	public int getFast() {
-		if (fast == null && content != null) fast = fastSignature(content);
-		return fast;
+		if (fast == null && content != null) fast = (long)fastSignature(content);
+		return new Long(fast).intValue();
 	}
 
 	/**
@@ -104,16 +101,19 @@ public class Signature {
 	}
 	
 	
-	void pack(OutputStream out) throws IOException {
+	void pack(OutputStream out) throws Exception {
 		write32bit(out, getFast());
 		out.write(getStrong());
 	}
 	
-	static Signature unpack(InputStream in) throws IOException {
+	static Signature unpack(InputStream in, OutputStream fileOut) throws Exception {
 		byte buf[] = new byte[20];
 		Signature sign = new Signature();
-		sign.fast = (int)read32bit(in);
+		sign.fast = read32bit(in, fileOut);
 		in.read(buf);
+		if (fileOut != null) {
+			fileOut.write(buf);
+		}
 		sign.strong = buf;
 		return sign;
 	}

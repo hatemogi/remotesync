@@ -1,8 +1,5 @@
 package net.daum.remotesync;
 
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
 /** 
  * 원본파일을 접근할 인터페이스. {@link BuildCodeList#patch}에서 사용한다. 
  * 파일내용의 특정위치를 seek하고, 바이트블럭을 읽을 수 있는 메소드를 구현해야한다. 
@@ -16,35 +13,16 @@ public interface SourceFileAccess {
 	/** 
 	 * 파일의 특정 오프셋으로 이동. 
 	 */
-	void seek(long offset) throws IOException ;
+	void seek(long offset) throws Exception ;
 	
 	/**
 	 * 현재 오프셋에서 블럭단위 읽기. 
 	 * @param buf 읽은 블럭을 저장할 바이트 배열. 이 배열의 크기만큼 읽는다. 
 	 * @return 실제로 읽은 바이트 수. 요청한 크기보다 작게 읽혔을 수 있다. 
 	 */
-	long read(byte[] buf) throws IOException;
+	long read(byte[] buf) throws Exception;
 }
 
-
-class SourceRandomFileAccess implements SourceFileAccess {
-	private RandomAccessFile f; 
-	
-	public SourceRandomFileAccess(String filename) throws IOException {
-		f = new RandomAccessFile(filename, "r");
-	}
-	
-	@Override
-	public void seek(long offset) throws IOException {
-		f.seek(offset);
-	}
-
-	@Override
-	public long read(byte[] buf) throws IOException {
-		return f.read(buf);
-	}
-	
-}
 /**
  * 바이트 배열을 이용한 참고 구현. 테스트케이스에서 사용함. 
  * @author dante

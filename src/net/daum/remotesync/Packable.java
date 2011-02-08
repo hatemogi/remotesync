@@ -1,6 +1,5 @@
 package net.daum.remotesync;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -10,35 +9,60 @@ import java.io.OutputStream;
  *
  */
 public interface Packable {
-	long pack(OutputStream out) throws IOException;
+	long pack(OutputStream out) throws Exception;
 	
 }
 
 final class PackUtil {
-
-	static final void write16bit(OutputStream out, int i) throws IOException {
-		out.write((i & 0xFF00) >> 8);
-		out.write(i & 0xFF);
+	static final void write16bit(OutputStream out, int i) throws Exception {
+	    out.write((i >>> 8) & 0xFF);
+	    out.write(i & 0xFF);
 	}
 	
-	static final void write32bit(OutputStream out, long i) throws IOException {
-		out.write((int) ((i & 0xFF000000) >> 24));
-		out.write((int) (i & 0x00FF0000) >> 16);
-		out.write((int) (i & 0x0000FF00) >> 8);
-		out.write((int) (i & 0x000000FF) );		
+	static final void write32bit(OutputStream out, long i) throws Exception {
+		out.write(((int)i >>> 24) & 0xFF);
+		out.write(((int)i >>> 16) & 0xFF);
+		out.write(((int)i >>> 8) & 0xFF);
+	    out.write((int)i & 0xFF);
 	}
 	
-	static final int read16bit(InputStream in) throws IOException {
+	static final int read16bit(InputStream in, OutputStream fileOut) throws Exception {
+		int a;
 		int r = in.read();
-		r = (r << 8) | in.read();
+		if (fileOut != null) {
+			fileOut.write(r);
+		}
+		
+		r = (r << 8) | (a = in.read());
+		if (fileOut != null) {
+			fileOut.write(a);
+		}
+		
 		return r;
 	}
 
-	static final long read32bit(InputStream in) throws IOException {
-		long r = in.read();
-		r = (r << 8) | in.read();
-		r = (r << 8) | in.read();
-		r = (r << 8) | in.read();
+	static final long read32bit(InputStream in, OutputStream fileOut) throws Exception {
+		int a;
+		long r = a = in.read();
+		if (fileOut != null) {
+			fileOut.write(a);
+		}
+		
+		r = (r << 8) | (a = in.read());
+		if (fileOut != null) {
+			fileOut.write(a);
+		}
+		
+		r = (r << 8) | (a = in.read());
+		if (fileOut != null) {
+			fileOut.write(a);
+		}
+		
+		r = (r << 8) | (a = in.read());
+		if (fileOut != null) {
+			fileOut.write(a);
+		}
+		
 		return r;
 	}
 }

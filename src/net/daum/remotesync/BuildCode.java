@@ -1,11 +1,12 @@
 package net.daum.remotesync;
 
-import static net.daum.remotesync.PackUtil.read16bit;
 import static net.daum.remotesync.PackUtil.write16bit;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
 
 /**
  * {@link SourceCodeList}와 목표파일의 차이값을 관리하는 단위 객체. 
@@ -34,21 +35,63 @@ abstract public class BuildCode implements Packable {
 	}
 	
 	
-	public static BuildCode unpack(InputStream in) throws IOException {
-		int first = in.read();
-		int header = first & 0xC0;
-		int data = ((first & 0x3F) << 16) | read16bit(in);
+	public static BuildCode unpack(InputStream in, OutputStream fileOut) throws Exception {
+		int firstByte = in.read();
+		if (fileOut != null) {
+			fileOut.write(firstByte);
+		}
+		
+		int secondByte = in.read();
+		if (fileOut != null) {
+			fileOut.write(secondByte);
+		}
+		
+		int thirdByte = in.read();
+		if (fileOut != null) {
+			fileOut.write(thirdByte);
+		}
+		
+		int headerData = firstByte << 16;
+		headerData = headerData | secondByte << 8;
+		headerData = headerData | thirdByte;
+		
+		int header = headerData & 0x00C00000;
+		header = header >> 16;
+		int data = headerData & 0x003FFFFF;
+				
+//		int header = first & 0xC0;
+//		int data = ((first & 0x3F) << 16) | read16bit(in);
 		if (header == RefBuildCode.HEADER) {
 			return createRefCode(data);
 		} else if (header == RawBuildCode.HEADER) {
-			byte buf[] = new byte[data];
-			int r = in.read(buf);
-			if (r != data) throw new RuntimeException("couldn't read enough bytes for the raw code");
-			return createRawCode(buf);
+			ByteArrayOutputStream dynamicBuf = new ByteArrayOutputStream();
+			int readBytes = 0;
+			while (true) {
+				int r = in.read();
+				if (fileOut != null) {
+					fileOut.write(r);
+				}
+				
+				if (r == -1) {
+					break;
+				} else if (readBytes < data) {
+					dynamicBuf.write((byte)r);
+					readBytes++;
+				}
+				
+				if (readBytes == data) {
+					break;
+				}
+			}
+				
+			if (readBytes != data) throw new RuntimeException("couldn't read enough bytes for the raw code");
+			return createRawCode(dynamicBuf.toByteArray());
 		} else {
 			throw new RuntimeException("unknown header = " + header);
 		}
 	}
+
+	protected OutputStream debugOut;
 	
 	/**
 	 * 
@@ -64,7 +107,11 @@ abstract public class BuildCode implements Packable {
 	 * @return 실제 쓰여진 바이트 수
 	 * @throws IOException
 	 */
-	abstract public long patch(SourceFileAccess src, int blockSize, OutputStream out) throws IOException;
+	abstract public long patch(SourceFileAccess src, int blockSize, OutputStream out) throws Exception;
+
+	public void setDebugFile(OutputStream out) {
+		debugOut = out;
+	}
 }
 
 
@@ -94,20 +141,27 @@ class RefBuildCode extends BuildCode {
 		return "{ref:" + index + "}";
 	}
 
-	public long pack(OutputStream out) throws IOException {
+	public long pack(OutputStream out) throws Exception {
 		int header = 0x80;
-		out.write(header | ((index >> 16) & 0x3F));
+		out.write(header | ((index >>> 16) & 0x3F));
 		write16bit(out, index & 0xFFFF);
 		return 3;
 	}
 	
 	@Override
-	public long patch(SourceFileAccess src, int blockSize, OutputStream out) throws IOException {
+	public long patch(SourceFileAccess src, int blockSize, OutputStream out) throws Exception {
 		src.seek(index * blockSize);
 		byte buf[] = new byte[blockSize];
 		long r = src.read(buf);
 		assert r == blockSize: "referenced block must have the block-sized length";
 		out.write(buf);
+		if (debugOut != null) {
+			Signature s = new Signature(buf);
+			debugOut.write(("" + getIndex()).getBytes());
+			debugOut.write(": ".getBytes());
+			debugOut.write(s.getStrongBase64().getBytes());
+			debugOut.write("\n".getBytes());
+		}
 		return r;
 	}
 
@@ -135,19 +189,19 @@ class RawBuildCode extends BuildCode {
 	}
 	
 	public String toString() {
-		return "{raw:" + content.length + "}";
+		return "{raw:" + new String(content) + "}";
 	}
 	
-	public long pack(OutputStream out) throws IOException {
+	public long pack(OutputStream out) throws Exception {
 		int header = 0x00;
-		out.write(header | ((content.length >> 16) & 0x3F));
+		out.write(header | ((content.length >>> 16) & 0x3F));
 		write16bit(out, content.length & 0xFFFF);
 		out.write(content);
 		return 3 + content.length;
 	}
 
 	@Override
-	public long patch(SourceFileAccess src, int blockSize, OutputStream out) throws IOException {
+	public long patch(SourceFileAccess src, int blockSize, OutputStream out) throws Exception {
 		out.write(content);
 		return content.length;
 	}

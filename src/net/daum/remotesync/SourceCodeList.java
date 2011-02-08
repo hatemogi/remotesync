@@ -1,11 +1,17 @@
 package net.daum.remotesync;
 
+import static net.daum.remotesync.PackUtil.read16bit;
+import static net.daum.remotesync.PackUtil.read32bit;
+import static net.daum.remotesync.PackUtil.write16bit;
+import static net.daum.remotesync.PackUtil.write32bit;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import static net.daum.remotesync.PackUtil.*;
+import net.daum.disk.file.handler.stream.StreamHandler;
+import net.daum.disk.file.utils.StreamReadResult;
 
 
 /**
@@ -13,9 +19,9 @@ import static net.daum.remotesync.PackUtil.*;
  * 이 객체를 기준으로 {@link BuildCodeList}를 만들어낼 수 있고, BuildCodeList와 SourceFile이 있으면, 
  * 목표파일을 생성해낼 수 있다. 
  * <ol>
- * <li>SourceFile → SourceCodeList</li>
- * <li>SourceCodeList + TargetFile → {@link BuildCodeList}</li>
- * <li>{@link BuildCodeList} + SourceFile → TargetFile</li>
+ * <li>SourceFile => SourceCodeList</li>
+ * <li>SourceCodeList + TargetFile => {@link BuildCodeList}</li>
+ * <li>{@link BuildCodeList} + SourceFile => TargetFile</li>
  * </ol>
  * 
  * <p>
@@ -30,8 +36,8 @@ import static net.daum.remotesync.PackUtil.*;
  * 
  * 이때, 파일을 동기화하기 위한 절차는 다음과 같다. 
  * <ol>
- * <li>machineA가 srcFile로 부터 SourceCodeList를 생성 → machineB에게 전달한다. 
- * <li>machineB는 전달받은 SourceCodeList와 newFile의 내용을 바탕으로 {@link BuildCodeList}를 작성 → machineA에게 전달한다. 
+ * <li>machineA가 srcFile로 부터 SourceCodeList를 생성해서 machineB에게 전달한다. 
+ * <li>machineB는 전달받은 SourceCodeList와 newFile의 내용을 바탕으로 {@link BuildCodeList}를 작성해 machineA에게 전달한다. 
  * <li>machineA는 machineB로부터 받은 {@link BuildCodeList}와 srcFile의 내용을 참고해 newFile을 생성해낸다. 
  * <li>이로써, machineA는 machineB의 newFile과 같은 내용의 파일을 갖게 된다. 
  * </ol>
@@ -71,15 +77,32 @@ public class SourceCodeList extends ArrayList<Signature> {
 	 * @return 블럭별 {@link Signature}객체가 추가된 {@link SourceCodeList}
 	 * @throws IOException
 	 */
-	public static final SourceCodeList create(InputStream in, int blockSize) throws IOException {
+	public static final SourceCodeList create(InputStream orgFileIn, int blockSize) throws Exception {
+		InputStream in = orgFileIn;
+		
 		SourceCodeList sc = new SourceCodeList(blockSize);
 		byte[] buf = new byte[blockSize];
 		int r = 0;
-		while ((r = in.read(buf)) > 0) {
+		
+		StreamReadResult readResult = new StreamReadResult();
+		while (true) {
+			StreamHandler.readIntoBufferBuffered(in, buf, blockSize, readResult);
+			r = readResult.readCount;
+			
 			if (r == blockSize) {
 				sc.add(new Signature(buf));
-			} 
+			}
+			
+			if (readResult.noMoreToRead()) {
+				break;
+			}
 		}
+		
+//		while ((r = in.read(buf)) > 0) {
+//			if (r == blockSize) {
+//				sc.add(new Signature(buf));
+//			} 
+//		}
 		return sc;		
 	}
 
@@ -98,16 +121,16 @@ public class SourceCodeList extends ArrayList<Signature> {
 	 * @return 해당 데이타에서 추출된 SourceCodeList.
 	 * @throws IOException
 	 */
-	public static final SourceCodeList unpack(InputStream in) throws IOException {
+	public static final SourceCodeList unpack(InputStream in, OutputStream fileOut) throws Exception {
 		int version = in.read();
 		if (version != VERSION1) {
 			throw new RuntimeException("SOURCE_CODES Version mismatch");
 		}
-		int blockSize = read16bit(in);
-		long count = read32bit(in);
+		int blockSize = read16bit(in, fileOut);
+		long count = read32bit(in, fileOut);
 		SourceCodeList sc = new SourceCodeList(blockSize);
 		for (long i = 0; i < count; i++) {
-			sc.add(Signature.unpack(in));
+			sc.add(Signature.unpack(in, fileOut));
 		}
 		return sc;
 	}
@@ -118,15 +141,25 @@ public class SourceCodeList extends ArrayList<Signature> {
 	 * @return 쓴 바이트 수 
 	 * @throws IOException
 	 */
-	public long pack(OutputStream out) throws IOException {
+	public long pack(OutputStream out) throws Exception {
 		out.write(VERSION1);
 		write16bit(out, blockSize);
 		write32bit(out, this.size());
+		
 		long written = 1 + 2 + 4;
+		OutputStream debugOut = null; // had been here for debug purpose.
+		
 		for (Signature sign: this) {
 			write32bit(out, sign.getFast());
 			out.write(sign.getStrong());
+			if (debugOut != null) {
+				debugOut.write(sign.getStrongBase64().getBytes());
+			}
 			written += 24;
+		}
+		
+		if (debugOut != null) {
+			debugOut.close();
 		}
 		return written;
 	}
@@ -139,8 +172,8 @@ public class SourceCodeList extends ArrayList<Signature> {
 	 * @return 생성된 {@link BuildCodeList}
 	 * @throws IOException
 	 */
-	public BuildCodeList generateBuildCodes(InputStream newFileIn, long rawLimit) throws IOException {
-		return BuildCodeList.create(this, newFileIn, rawLimit);
+	public BuildCodeList generateBuildCodes(InputStream newFileIn, long rawLimit, boolean oversizeCheck) throws Exception {
+		return BuildCodeList.create(this, newFileIn, rawLimit, oversizeCheck);
 	}
 	
 	/**
@@ -149,8 +182,9 @@ public class SourceCodeList extends ArrayList<Signature> {
 	 * @return 생성된 {@link BuildCodeList}
 	 * @throws IOException
 	 */
-	public BuildCodeList generateBuildCodes(InputStream targetFileIn) throws IOException {
-		return generateBuildCodes(targetFileIn, RemoteSync.MAX_RAW_LENGTH);
+	public BuildCodeList generateBuildCodes(InputStream targetFileIn) throws Exception {
+//		return generateBuildCodes(targetFileIn, RemoteSync.DEFAULT_RAW_LIMIT, true);
+		return generateBuildCodes(targetFileIn, RemoteSync.DEFAULT_RAW_LIMIT, false);
 	}
 	
 }
